@@ -47,8 +47,8 @@ function installLint(useYarn) {
     console.log("Eslint configurations created.");
 
     updatePackageFileScripts({
-        lint: "eslint . --ext .ts",
-        "lint:fix": "eslint . --ext .ts --fix",
+        lint: "eslint ./src",
+        "lint:fix": "eslint ./src --fix",    
     });
 
     console.log("ESLint installed.");
