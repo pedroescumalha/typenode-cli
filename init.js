@@ -7,22 +7,21 @@ const path = require("path");
  * @param {Boolean} useYarn - If the user wants to use yarn as the package manager.
  */
 function initProject(useYarn) {
-    createProject(useYarn);
+    const packageManager = useYarn ? "yarn" : "npm";    
+    console.log(`Initializing project with ${packageManager}.`);
+    runPackageManagerInit(packageManager);
 
     installTypescript(useYarn);
     installLint(useYarn);
 
     createSrcFolder();
+
+    console.log("Project created.");
 }
 
-function createProject(useYarn) {
-    const packageManager = useYarn ? "yarn" : "npm";
-    
-    console.log(`Initializing project with ${packageManager}.`);
+function runPackageManagerInit(packageManager) {
     spawnSync(packageManager, ["init", "-y"], { stdio: "inherit" });
-    console.log("Base project created.");
 }
-
 function installTypescript(useYarn) {
     installDevDependency(useYarn, "typescript");
     installDevDependency(useYarn, "@types/node");
@@ -39,8 +38,6 @@ function installTypescript(useYarn) {
 }
 
 function installLint(useYarn) {
-    console.log("Installing ESLint.");
-
     installDevDependency(useYarn, "eslint");
     installDevDependency(useYarn, "@typescript-eslint/eslint-plugin");
     installDevDependency(useYarn, "@typescript-eslint/parser");
