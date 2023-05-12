@@ -1,0 +1,16 @@
+{
+  "name": "typenode-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Escumalha"
+  },
+  "bin": {
+    "typenode": "index.js"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  }
+}
