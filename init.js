@@ -13,6 +13,7 @@ function initProject(useYarn) {
 
     installTypescript(useYarn);
     installLint(useYarn);
+    installTests(useYarn);
 
     createSrcFolder();
 
@@ -22,6 +23,7 @@ function initProject(useYarn) {
 function runPackageManagerInit(packageManager) {
     spawnSync(packageManager, ["init", "-y"], { stdio: "inherit" });
 }
+
 function installTypescript(useYarn) {
     installDevDependency(useYarn, "typescript");
     installDevDependency(useYarn, "@types/node");
@@ -41,6 +43,9 @@ function installLint(useYarn) {
     installDevDependency(useYarn, "eslint");
     installDevDependency(useYarn, "@typescript-eslint/eslint-plugin");
     installDevDependency(useYarn, "@typescript-eslint/parser");
+    installDevDependency(useYarn, "@typescript-eslint/parser");
+    installDevDependency(useYarn, "eslint-plugin-jsdoc");
+
 
     console.log("Creating eslint configurations.");
     fs.copyFileSync(path.resolve(__dirname, ".eslintrc.json"), ".eslintrc.json");
@@ -52,6 +57,18 @@ function installLint(useYarn) {
     });
 
     console.log("ESLint installed.");
+}
+
+function installTests(useYarn) {
+    installDevDependency(useYarn, "globstar");
+
+    console.log("Configuring tests.");
+
+    updatePackageFileScripts({
+        test: "globstar -- node --test --require ts-node/register ./src/**/*.test.ts",
+    });
+
+    console.log("Tests configured.");
 }
 
 function updatePackageFileScripts(scripts) {
