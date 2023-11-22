@@ -93,6 +93,8 @@ function createTypescriptFile(useYarn) {
             "--init",
             "--rootDir", "src",
             "--outDir", "dist", 
+            "--target", "es2022", 
+            "--module", "nodenext", 
             "--moduleResolution", "node16",
             "--baseUrl", "./",
             "--resolveJsonModule", "true",
