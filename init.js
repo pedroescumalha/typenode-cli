@@ -4,9 +4,10 @@ const path = require("path");
 
 /**
  * Initializes the project.
- * @param {Boolean} useYarn - If the user wants to use yarn as the package manager.
+ * @param {boolean} useYarn - If the user wants to use yarn as the package manager.
+ * @param {boolean} setupCI - If the CI files should be included.
  */
-function initProject(useYarn) {
+function initProject(useYarn, setupCI) {
     const packageManager = useYarn ? "yarn" : "npm";    
     console.log(`Initializing project with ${packageManager}.`);
     runPackageManagerInit(packageManager);
@@ -17,13 +18,25 @@ function initProject(useYarn) {
 
     createSrcFolder();
 
+    if (setupCI) {
+        copyCIFiles();
+    }
+
     console.log("Project created.");
 }
 
+/**
+ *
+ * @param packageManager
+ */
 function runPackageManagerInit(packageManager) {
     spawnSync(packageManager, ["init", "-y"], { stdio: "inherit" });
 }
 
+/**
+ *
+ * @param useYarn
+ */
 function installTypescript(useYarn) {
     installDevDependency(useYarn, "typescript");
     installDevDependency(useYarn, "@types/node");
@@ -35,10 +48,14 @@ function installTypescript(useYarn) {
     updatePackageFileScripts({
         start: "node dist/index.js",
         build: "tsc",
-        dev: "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --ignore 'src/**/*.test.ts' --exec 'ts-node src/index.ts'"
+        dev: "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --ignore 'src/**/*.test.ts' --exec 'ts-node src/index.ts'",
     });
 }
 
+/**
+ *
+ * @param useYarn
+ */
 function installLint(useYarn) {
     installDevDependency(useYarn, "eslint");
     installDevDependency(useYarn, "@typescript-eslint/eslint-plugin");
@@ -59,6 +76,10 @@ function installLint(useYarn) {
     console.log("ESLint installed.");
 }
 
+/**
+ *
+ * @param useYarn
+ */
 function installTests(useYarn) {
     installDevDependency(useYarn, "globstar");
 
@@ -71,6 +92,10 @@ function installTests(useYarn) {
     console.log("Tests configured.");
 }
 
+/**
+ *
+ * @param scripts
+ */
 function updatePackageFileScripts(scripts) {
     console.log("Updating scripts to the package.json file.");
 
@@ -80,9 +105,13 @@ function updatePackageFileScripts(scripts) {
 
     fs.writeFileSync("package.json", JSON.stringify(packageFile, null, 2));
 
-    console.log("package.json file updated.")
+    console.log("package.json file updated.");
 }
 
+/**
+ *
+ * @param useYarn
+ */
 function createTypescriptFile(useYarn) {
     console.log("Setting up typescript.");
 
@@ -103,11 +132,17 @@ function createTypescriptFile(useYarn) {
             "--forceConsistentCasingInFileNames", "true",
             "--noImplicitAny", "true",
             "--noImplicitReturns", "true",
-            "--noUncheckedIndexedAccess", "true"
+            "--noUncheckedIndexedAccess", "true",
         ],
-        { stdio: "inherit" });
+        { stdio: "inherit" }
+    );
 }
 
+/**
+ *
+ * @param useYarn
+ * @param dependency
+ */
 function installDevDependency(useYarn, dependency) {
     console.log(`Installing ${dependency}`);
 
@@ -116,12 +151,19 @@ function installDevDependency(useYarn, dependency) {
     console.log(`${dependency} installed.`);
 }
 
+/**
+ *
+ */
 function createSrcFolder() {
     fs.mkdirSync("src");
     const file = "console.log(\"hello world\");";
     fs.writeFileSync("src/index.ts", file);
 }
 
+function copyCIFiles() {
+    fs.cpSync(path.resolve(__dirname, ".github"), ".github", { recursive: true });
+}
+
 module.exports = {
-    initProject
+    initProject,
 };
