@@ -160,8 +160,13 @@ function createSrcFolder() {
     fs.writeFileSync("src/index.ts", file);
 }
 
+/**
+ *
+ */
 function copyCIFiles() {
+    console.log("Setting up the CI files");
     fs.cpSync(path.resolve(__dirname, ".github"), ".github", { recursive: true });
+    console.log("CI setup completed");
 }
 
 module.exports = {
