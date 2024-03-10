@@ -1,0 +1,39 @@
+name: Build changelog
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - edited
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rdme-changelogs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Build changelog
+        env:
+          CHANGELOG_TITLE: ${{ github.event.pull_request.title }}
+          CHANGELOG_DESCRIPTION: ${{ github.event.pull_request.body }}
+          CHANGELOG_ID: ${{ github.event.pull_request.id }}
+        run: |
+          yarn
+          yarn changelog
+
+      - name: Run `changelogs` command
+        uses: readmeio/rdme@v8
+        with:
+          rdme: changelogs ./changelogs --key=${{ secrets.README_API_KEY }} --dryRun

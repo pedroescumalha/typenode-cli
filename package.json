@@ -9,6 +9,9 @@
   "bin": {
     "typenode": "index.js"
   },
+  "scripts": {
+      "changelog": "node ./buildChangelog.js"
+  },
   "type": "commonjs",
   "dependencies": {
     "yargs": "^17.7.2"
