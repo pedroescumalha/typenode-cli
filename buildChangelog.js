@@ -31,6 +31,8 @@ type: ${type}
 ${process.env.CHANGELOG_DESCRIPTION}
 `;
 
+console.log('!!!!!!!!!!!!!', process.env.CHANGELOG_DESCRIPTION, process.env.CHANGELOG_ID, process.env.CHANGELOG_TITLE);
+
 const filePath = `changelogs/${process.env.CHANGELOG_ID}.md`;
 
 if (existsSync(filePath)) {
