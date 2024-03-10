@@ -4,9 +4,9 @@ on:
   pull_request:
     branches:
       - main
-        # types:
-        #   - opened
-        #   - synchronize
+    types:
+      - opened
+      - edited
 
 jobs:
   rdme-changelogs:
@@ -22,9 +22,9 @@ jobs:
 
       - name: Build changelog
         env:
-          CHANGELOG_TITLE: ${{github.event.pull_request.title}}
-          CHANGELOG_DESCRIPTION: ${{github.event.pull_request.body}}
-          CHANGELOG_ID: ${{github.event.pull_request.id}}
+          CHANGELOG_TITLE: ${{ github.event.pull_request.title }}
+          CHANGELOG_DESCRIPTION: ${{ github.event.pull_request.body }}
+          CHANGELOG_ID: ${{ github.event.pull_request.id }}
         run: |
           yarn
           yarn changelog
